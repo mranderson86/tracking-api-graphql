@@ -26,6 +26,7 @@ const typeDefs = `
   }
   type Query {
     allUsers: [User]
+    currentUser: User
     fetchUser(id: Int!): User
     allTechnologies: [Technology]
     fetchTechnology(id: Int!): Technology

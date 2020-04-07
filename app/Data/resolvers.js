@@ -28,6 +28,14 @@ const resolvers = {
       const technology = await Technology.find(id);
       return technology.toJSON();
     },
+
+    async currentUser(_, ctx, { auth }) {
+      await auth.check();
+
+      const id = auth.user.id;
+      const user = await User.find(auth.user.id);
+      return user.toJSON();
+    },
   },
 
   Mutation: {
