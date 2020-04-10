@@ -9,22 +9,30 @@ const slugify = require("slugify");
 const resolvers = {
   Query: {
     // Fetch all users
-    async allUsers() {
+    async allUsers(_, { ctx }, { auth }) {
+      await auth.check();
+
       const users = await User.all();
       return users.toJSON();
     },
     // Get a user by its ID
-    async fetchUser(_, { id }) {
+    async fetchUser(_, { id }, { auth }) {
+      await auth.check();
+
       const user = await User.find(id);
       return user.toJSON();
     },
     // Fetch all technologies
-    async allTechnologies() {
+    async allTechnologies(_, ctx, { auth }) {
+      await auth.check();
+
       const technologies = await Technology.all();
       return technologies.toJSON();
     },
     // Get a technology by its ID
-    async fetchTechnology(_, { id }) {
+    async fetchTechnology(_, { id }, { auth }) {
+      await auth.check();
+
       const technology = await Technology.find(id);
       return technology.toJSON();
     },
