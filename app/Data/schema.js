@@ -30,6 +30,7 @@ const typeDefs = `
     fetchUser(id: Int!): User
     allTechnologies: [Technology]
     fetchTechnology(id: Int!): Technology
+    fetchTechnologiesAvailable: [Technology]
   }
   type Mutation {
     login (email: String!, password: String!): String

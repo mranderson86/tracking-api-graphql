@@ -29,12 +29,49 @@ const resolvers = {
       return technology.toJSON();
     },
 
+    // Get current user
     async currentUser(_, ctx, { auth }) {
       await auth.check();
 
       const id = auth.user.id;
       const user = await User.find(auth.user.id);
       return user.toJSON();
+    },
+
+    // Get technologies avalilable in today
+    async fetchTechnologiesAvailable(_, ctx, { auth }) {
+      await auth.check();
+
+      const id = auth.user.id;
+      const dateToday = new Date();
+      const user = await User.find(id);
+
+      // technology of user in today
+      const technologiesToday = await user
+        .technologies()
+        .pivotQuery()
+        .where("date_checkIn", dateToday)
+        .fetch();
+
+      // technologies
+      const technologies = await Technology.all();
+
+      // Convert to JSON format
+      const technologiesJson = technologies
+        .toJSON()
+        .map(({ id, technology }) => ({ id, technology }));
+
+      // Convert to JSON format
+      const technologiesTodayJson = technologiesToday
+        .toJSON()
+        .map(({ technology_id }) => technology_id);
+
+      // Remove technologies already tracking
+      const technologiesAvailable = technologiesJson.filter(
+        ({ id }) => !technologiesTodayJson.includes(id)
+      );
+
+      return technologiesAvailable;
     },
   },
 
@@ -121,7 +158,6 @@ const resolvers = {
         .users()
         .wherePivot("date_checkIn", dateToday)
         .fetch();
-
       return users.toJSON();
     },
   },
